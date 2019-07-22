@@ -4,6 +4,9 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
 
+from scipy.spatial import KDTree
+import numpy as np
+
 import math
 
 '''
@@ -32,20 +35,75 @@ class WaypointUpdater(object):
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
-
+        
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
         # TODO: Add other member variables you need below
+        self.base_waypoints = None
+        self.waypoints_2d = None #因为考虑到要先初始化再call back所以设一个 variable of self
+        self.waypoint_tree = None
+        self.pose = None
+        
+        #rospy.spin()
 
-        rospy.spin()
-
+    def loop(self):
+        # TODO
+        rate = rospy.Rate(30)
+        while not rospy.is_shutdown():
+            if self.pose and self.base_waypoints: #如果两者都不是None
+                closest_waypoint_index = self.get_closest_points_index()
+                self.publish_waypoints(closest_waypoint_index)
+            rate.sleep()
+        # TODO: END
+    
+    def get_closest_points_index():
+        # TODO
+        x = self.pose.pose.position.x
+        y = self.pose.pose.position.y
+        
+        closest_index = self.waypoint_tree.query([x,y], 1)[1]
+        closest_coord = self.waypoints_2d[closest_index]
+        previous_coord = self.waypoints_2d[closest_index-1] #这里有疑问
+        #上一个点：位置上，应该在后面
+        
+        #下一步判断coord在pose前还是后: 根据向量乘积的 negative和 positive 来判断
+        closest_coord_vector = np.array(closest_coord)
+        previous_coord_vector = np.array(previous_coord)
+        pose_coord_vector = np.array([x,y])
+        
+        difference_vector1 = previous_coord_vector - pose_coord_vector
+        difference_vector2 = closest_coord_vector - pose_coord_vector
+        value = np.dot(difference_vector1,difference_vector2)
+        
+        if value > 0: #说明车在点前
+            closest_index = (closest_index+1) % len(self.waypoints_2d)
+            #选择下一个点（位置上，为前面那个点），因为离车最近的点在车子后，则下一个点一定在车前了
+            #如果超出了界限，则从头开始，位置上应该是连续的（因为在simulator中是转圈的）
+            
+        return closest_index
+        # TODO END
+    
+    def publish_waypoints(self,closest_index):
+        publish_msg = Lane()
+        publish_msg.header = self.base_waypoints.header
+        publish_msg.waypoints = self.base_waypoints.waypoints[closest_index:closest_index+LOOKAHEAD_WPS]
+        self.final_waypoints_pub.publish(publish_msg)
+    
     def pose_cb(self, msg):
         # TODO: Implement
-        pass
+        self.pose = msg
+        # TODO: END
+        #pass
 
     def waypoints_cb(self, waypoints):
         # TODO: Implement
+        self.base_waypoints = waypoint
+        if not self.waypoints_2d:
+            self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints] 
+            self.waypoint_tree = KDTree(self.waypoints_2d)
+        # TODO: END
+        
         pass
 
     def traffic_cb(self, msg):
