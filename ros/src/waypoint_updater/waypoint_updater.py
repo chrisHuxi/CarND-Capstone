@@ -57,7 +57,7 @@ class WaypointUpdater(object):
             rate.sleep()
         # TODO: END
     
-    def get_closest_points_index():
+    def get_closest_points_index(self):
         # TODO
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
