@@ -44,12 +44,12 @@ class WaypointUpdater(object):
         self.waypoints_2d = None #因为考虑到要先初始化再call back所以设一个 variable of self
         self.waypoint_tree = None
         self.pose = None
-        
+        self.loop()
         #rospy.spin()
 
     def loop(self):
         # TODO
-        rate = rospy.Rate(30)
+        rate = rospy.Rate(50)
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints: #如果两者都不是None
                 closest_waypoint_index = self.get_closest_points_index()
