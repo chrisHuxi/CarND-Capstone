@@ -25,7 +25,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 75 # Number of waypoints we will publish. You can change this number
+LOOKAHEAD_WPS = 50 # Number of waypoints we will publish. You can change this number
 MAX_DECEL = 0.5
 
 class WaypointUpdater(object):
@@ -48,10 +48,6 @@ class WaypointUpdater(object):
         
         self.stop_line_waypoint_index = -1
         
-        # for optimization
-        self.prev_pose_x = None
-        self.prev_pose_y = None
-        self.prev_lane = None
 
         
         self.loop()
@@ -61,7 +57,7 @@ class WaypointUpdater(object):
 
     def loop(self):
         # TODO
-        rate = rospy.Rate(20)
+        rate = rospy.Rate(10)
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints: #如果两者都不是None
                 self.publish_waypoints()
@@ -109,12 +105,7 @@ class WaypointUpdater(object):
     def generate_lane(self):
         # TODO
         final_lane = Lane()
-        eps = 1E-4 # position precision is up to 2 digits after comma   
-	    # part of optimization. no need to recalculate waypoints if position didn't change
-        if self.prev_pose_x is not None and self.prev_pose_y is not None:
-                if np.fabs(self.prev_pose_x - self.pose.pose.position.x) < eps and np.fabs(self.prev_pose_y - self.pose.pose.position.y) < eps:
-                        # rospy.logerr("this s*** happens often")
-                        return self.prev_lane 
+
         
         closest_waypoint_index = self.get_closest_points_index()
         farthest_waypoint_index = closest_waypoint_index + closest_waypoint_index
@@ -126,10 +117,6 @@ class WaypointUpdater(object):
             #final_lane.waypoints = base_waypoints_slice
             final_lane.waypoints = self.get_decelerate_waypoint(base_waypoints_slice, closest_waypoint_index)
         
-        final_lane.header = self.base_waypoints.header
-        self.prev_lane = lane
-        self.prev_pose_x = self.pose.pose.position.x
-        self.prev_pose_y = self.pose.pose.position.y
         
         return final_lane
         # TODO: END
@@ -147,6 +134,7 @@ class WaypointUpdater(object):
             temp_waypoint.pose = wp.pose
             # we should stop a little bit in front of stop line to make sure safty
             stop_index = max(self.stop_line_waypoint_index - closest_waypoint_index - 2, 0)
+            rospy.logwarn("stop_index:{0}".format(stop_index))
             distance_to_stop = self.distance(base_waypoints_slice, i, stop_index)
             desire_velocity = math.sqrt(2 * decelaration_in_theory * distance_to_stop)
             # uniformly accelerated motion: v^2 = 2 * a * x
@@ -175,7 +163,7 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         self.stop_line_waypoint_index = msg.data
-        rospy.logwarn("stop_line_waypoint_index:{0}".format(msg.data))
+        rospy.logwarn("stop_line_waypoint_index:{0}".format(self.stop_line_waypoint_index))
         # pass
 
     def obstacle_cb(self, msg):

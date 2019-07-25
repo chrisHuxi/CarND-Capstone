@@ -89,7 +89,7 @@ class DBWNode(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(50) # 50Hz
+        rate = rospy.Rate(20) # 50Hz
         while not rospy.is_shutdown():
             #rospy.logwarn("dbw enabled:{0}".format(self.dbw_enabled))
 
