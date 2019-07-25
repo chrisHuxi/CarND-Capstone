@@ -35,7 +35,7 @@ class WaypointUpdater(object):
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
-        
+        rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
@@ -44,16 +44,20 @@ class WaypointUpdater(object):
         self.waypoints_2d = None #因为考虑到要先初始化再call back所以设一个 variable of self
         self.waypoint_tree = None
         self.pose = None
+        
+        self.stop_line_waypoint_index = None
+        
         self.loop()
+        
+        
         #rospy.spin()
 
     def loop(self):
         # TODO
-        rate = rospy.Rate(30)
+        rate = rospy.Rate(50)
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints: #如果两者都不是None
-                closest_waypoint_index = self.get_closest_points_index()
-                self.publish_waypoints(closest_waypoint_index)
+                self.publish_waypoints()
             rate.sleep()
         # TODO: END
     
@@ -85,10 +89,52 @@ class WaypointUpdater(object):
         # TODO END
     
     def publish_waypoints(self,closest_index):
+        # TODO
+        final_lane = self.generate_lane()
+        self.final_waypoints_pub.publish(final_lane)
+        # TODO: END
+        '''
         publish_msg = Lane()
         publish_msg.header = self.base_waypoints.header
-        publish_msg.waypoints = self.base_waypoints.waypoints[closest_index:closest_index+LOOKAHEAD_WPS]
+        
         self.final_waypoints_pub.publish(publish_msg)
+        '''
+    def generate_lane(self):
+        # TODO
+        final_lane = Lane()
+        final_lane.header = self.base_waypoints.header
+        closest_waypoint_index = self.get_closest_points_index()
+        farthest_waypoint_index = closest_waypoint_index + closest_waypoint_index
+        base_waypoints_slice = self.base_waypoints.waypoints[closest_waypoint_index:closest_waypoint_index+LOOKAHEAD_WPS]
+        
+        if self.stop_line_waypoint_index == -1 or self.stop_line_waypoint_index >= farthest_waypoint_index:
+            final_lane.waypoints = base_waypoints_slice
+        else:
+            final_lane.waypoints = self.get_decelerate_waypoint(base_waypoints_slice, closest_waypoint_index)
+            
+        return final_lane
+        # TODO: END
+        
+    def get_decelerate_waypoint(self, base_waypoints_slice, closest_waypoint_index):
+        # TODO
+        temp_waypoints_list = []
+        initial_velocity = base_waypoints_slice[0].twist.twist.linear.x
+        stop_index = max(self.stop_line_waypoint_index - closest_waypoint_index - 2, 0)
+        initial_distance_to_stop = self.distance(base_waypoints_slice, 0, stop_index)
+        decelaration_in_theory = (initial_velocity)*(initial_velocity)/(2.0*initial_distance_to_stop)
+        
+        for i,wp in enumerate(base_waypoints_slice):
+            temp_waypoint = Waypoint()
+            temp_waypoint.pose = wp.pose
+            # we should stop a little bit in front of stop line to make sure safty
+            distance_to_stop = self.distance(base_waypoints_slice, i, stop_index)
+            desire_velocity = math.sqrt(2 * decelaration_in_theory * distance_to_stop)
+            # uniformly accelerated motion: v^2 = 2 * a * x
+            if desire_velocity < 1.0:
+                desire_velocity = 0.0
+            temp_waypoint.twist.twist.linear.x = min(desire_velocity, temp_waypoint.twist.twist.linear.x)
+            temp_waypoints_list.append(temp_waypoint)
+        return temp_waypoints_list
     
     def pose_cb(self, msg):
         # TODO: Implement
@@ -104,11 +150,12 @@ class WaypointUpdater(object):
             self.waypoint_tree = KDTree(self.waypoints_2d)
         # TODO: END
         
-        pass
+        #pass
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
-        pass
+        self.stop_line_waypoint_index = msg.data
+        # pass
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later
