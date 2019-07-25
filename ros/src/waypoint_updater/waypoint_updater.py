@@ -48,6 +48,12 @@ class WaypointUpdater(object):
         
         self.stop_line_waypoint_index = -1
         
+        # for optimization
+        self.prev_pose_x = None
+        self.prev_pose_y = None
+        self.prev_lane = None
+
+        
         self.loop()
         
         
@@ -103,7 +109,13 @@ class WaypointUpdater(object):
     def generate_lane(self):
         # TODO
         final_lane = Lane()
-        final_lane.header = self.base_waypoints.header
+        eps = 1E-4 # position precision is up to 2 digits after comma   
+	    # part of optimization. no need to recalculate waypoints if position didn't change
+        if self.prev_pose_x is not None and self.prev_pose_y is not None:
+                if np.fabs(self.prev_pose_x - self.pose.pose.position.x) < eps and np.fabs(self.prev_pose_y - self.pose.pose.position.y) < eps:
+                        # rospy.logerr("this s*** happens often")
+                        return self.prev_lane 
+        
         closest_waypoint_index = self.get_closest_points_index()
         farthest_waypoint_index = closest_waypoint_index + closest_waypoint_index
         base_waypoints_slice = self.base_waypoints.waypoints[closest_waypoint_index:closest_waypoint_index+LOOKAHEAD_WPS]
@@ -113,7 +125,12 @@ class WaypointUpdater(object):
         else:
             #final_lane.waypoints = base_waypoints_slice
             final_lane.waypoints = self.get_decelerate_waypoint(base_waypoints_slice, closest_waypoint_index)
-            
+        
+        final_lane.header = self.base_waypoints.header
+        self.prev_lane = lane
+        self.prev_pose_x = self.pose.pose.position.x
+        self.prev_pose_y = self.pose.pose.position.y
+        
         return final_lane
         # TODO: END
         

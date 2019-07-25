@@ -287,23 +287,23 @@ void PurePursuit::getNextWaypoint()
   // look for the next waypoint.
   for (int i = 0; i < path_size; i++)
   {
-    // if search waypoint is the last
-    if (i == (path_size - 1))
-    {
-      ROS_INFO("search waypoint is the last");
-      num_of_next_waypoint_ = i;
-      return;
-    }
-
-    // if there exists an effective waypoint
-    if (getPlaneDistance(current_waypoints_.getWaypointPosition(i), current_pose_.pose.position) > lookahead_distance_)
-    {
+    
+   // if there exists an effective waypoint 
+   if (getPlaneDistance(current_waypoints_.getWaypointPosition(i), current_pose_.pose.position) > lookahead_distance_ &&  current_waypoints_.isFront(i, current_pose_.pose))
+   {
       num_of_next_waypoint_ = i;
       //ROS_ERROR_STREAM("wp = " << i << " dist = " << getPlaneDistance(current_waypoints_.getWaypointPosition(i), current_pose_.pose.position) );
       return;
     }
   }
-
+  
+  // if search waypoint is the last
+  if (current_waypoints_.isFront(path_size - 1, current_pose_.pose))
+  {
+    ROS_INFO("search waypoint is the last");
+    num_of_next_waypoint_ = path_size - 1;
+    return;
+  }
   // if this program reaches here , it means we lost the waypoint!
   num_of_next_waypoint_ = -1;
   return;
