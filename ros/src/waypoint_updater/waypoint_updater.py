@@ -25,7 +25,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 50 # Number of waypoints we will publish. You can change this number
+LOOKAHEAD_WPS = 75 # Number of waypoints we will publish. You can change this number
 MAX_DECEL = 0.5
 
 class WaypointUpdater(object):
@@ -108,7 +108,7 @@ class WaypointUpdater(object):
 
         
         closest_waypoint_index = self.get_closest_points_index()
-        farthest_waypoint_index = closest_waypoint_index + closest_waypoint_index
+        farthest_waypoint_index = closest_waypoint_index + LOOKAHEAD_WPS
         base_waypoints_slice = self.base_waypoints.waypoints[closest_waypoint_index:closest_waypoint_index+LOOKAHEAD_WPS]
         
         if self.stop_line_waypoint_index == -1 or self.stop_line_waypoint_index >= farthest_waypoint_index:
@@ -134,7 +134,7 @@ class WaypointUpdater(object):
             temp_waypoint.pose = wp.pose
             # we should stop a little bit in front of stop line to make sure safty
             stop_index = max(self.stop_line_waypoint_index - closest_waypoint_index - 2, 0)
-            rospy.logwarn("stop_index:{0}".format(stop_index))
+            #rospy.logwarn("stop_index:{0}".format(stop_index))
             distance_to_stop = self.distance(base_waypoints_slice, i, stop_index)
             desire_velocity = math.sqrt(2 * decelaration_in_theory * distance_to_stop)
             # uniformly accelerated motion: v^2 = 2 * a * x
@@ -163,7 +163,7 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         self.stop_line_waypoint_index = msg.data
-        rospy.logwarn("stop_line_waypoint_index:{0}".format(self.stop_line_waypoint_index))
+        #rospy.logwarn("stop_line_waypoint_index:{0}".format(self.stop_line_waypoint_index))
         # pass
 
     def obstacle_cb(self, msg):

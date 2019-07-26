@@ -84,9 +84,9 @@ class Controller(object):
             # here I modify: velocity_error => velocity_error/sample_time
             
             brake = abs(deceleration)*self.vehicle_mass*self.wheel_radius
-        rospy.logwarn("throttle: {0}".format(throttle))
-        rospy.logwarn("brake: {0}".format(brake))
-        rospy.logwarn("steering: {0}".format(steering))
+        #rospy.logwarn("throttle: {0}".format(throttle))
+        #rospy.logwarn("brake: {0}".format(brake))
+        #rospy.logwarn("steering: {0}".format(steering))
   
         return throttle, brake, steering    
             
