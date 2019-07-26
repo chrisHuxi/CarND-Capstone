@@ -98,11 +98,12 @@ class Bridge(object):
         return tw
 
     def create_steer(self, val):
-        st = SteeringReport()
-        st.steering_wheel_angle_cmd = val * math.pi/180.
-        st.enabled = True
-        st.speed = self.vel
-        return st
+         st = SteeringReport()
+         st.steering_wheel_angle = val
+         st.steering_wheel_cmd = val * math.pi/180.
+         st.enabled = True
+         st.speed = self.vel
+         return st
 
     def calc_angular(self, yaw):
         angular_vel = 0.
