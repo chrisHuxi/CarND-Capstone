@@ -14,7 +14,7 @@ from conf import conf
 sio = socketio.Server()
 app = Flask(__name__)
 #msgs = []
-msg = {}
+msgs = {}
 
 dbw_enable = False
 
