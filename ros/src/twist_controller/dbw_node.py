@@ -101,6 +101,7 @@ class DBWNode(object):
                                                                     self.current_velocity,
                                                                     self.dbw_enabled,
                                                                     self.current_angular_velocity)
+
             if self.dbw_enabled:
                 self.publish(self.throttle, self.brake, self.steering)
             rate.sleep()

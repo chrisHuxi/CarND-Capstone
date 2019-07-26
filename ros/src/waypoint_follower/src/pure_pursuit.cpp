@@ -31,7 +31,7 @@
 #include "pure_pursuit_core.h"
 
 constexpr int LOOP_RATE = 30; //processing frequency
-constexpr int Q = 10; //max. Qeue, was 10
+constexpr int Q = 1; //max. Qeue, was 10
 
 int main(int argc, char **argv)
 {
