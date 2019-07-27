@@ -22,7 +22,7 @@
 ## TODO-List:
 
 * **Training** a traffic light detector/classifier for simulator, testing it on high way scene.
-* **Training** a traffic light detector/classifier for real-world, testing it on second test slot scene.
+* **Training** a traffic light detector/classifier for real-world, testing it on [bag file]().
 * Trying to **test code** on native ubuntu 16.04, see if the latency is acceptable or not. If not trying to optimize it. ==> **done**, latency issue improved significantly. 
 * **Reviewing** whole project and writing README document.
 
