@@ -252,13 +252,11 @@ bool PurePursuit::verifyFollowing() const
 geometry_msgs::Twist PurePursuit::calcTwist(double curvature, double cmd_velocity) const
 {
   // verify whether vehicle is following the path
-  //bool following_flag = verifyFollowing(); 
-  bool following_flag = false; // modify for simulator, Huxi
+  bool following_flag = verifyFollowing();
   static double prev_angular_velocity = 0;
 
   geometry_msgs::Twist twist;
   twist.linear.x = cmd_velocity;
-  
   if (!following_flag)
   {
     //ROS_ERROR_STREAM("Not following");
@@ -287,7 +285,6 @@ void PurePursuit::getNextWaypoint()
   // look for the next waypoint.
   for (int i = 0; i < path_size; i++)
   {
-    
     // if search waypoint is the last
     if (i == (path_size - 1))
     {
@@ -297,13 +294,14 @@ void PurePursuit::getNextWaypoint()
     }
 
     // if there exists an effective waypoint
-    if (getPlaneDistance(current_waypoints_.getWaypointPosition(i), current_pose_.pose.position) > lookahead_distance_){
+    if (getPlaneDistance(current_waypoints_.getWaypointPosition(i), current_pose_.pose.position) > lookahead_distance_)
+    {
       num_of_next_waypoint_ = i;
       //ROS_ERROR_STREAM("wp = " << i << " dist = " << getPlaneDistance(current_waypoints_.getWaypointPosition(i), current_pose_.pose.position) );
       return;
     }
   }
-  
+
   // if this program reaches here , it means we lost the waypoint!
   num_of_next_waypoint_ = -1;
   return;
@@ -405,3 +403,4 @@ geometry_msgs::TwistStamped PurePursuit::go()
 #endif
 }
 }
+

@@ -57,7 +57,7 @@ class WaypointUpdater(object):
 
     def loop(self):
         # TODO
-        rate = rospy.Rate(30)
+        rate = rospy.Rate(50)
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints: #如果两者都不是None
                 self.publish_waypoints()
@@ -106,8 +106,8 @@ class WaypointUpdater(object):
         # TODO
         final_lane = Lane()
 
-        
         closest_waypoint_index = self.get_closest_points_index()
+        #rospy.logwarn("closest_waypoint_index:{0}".format(closest_waypoint_index))
         farthest_waypoint_index = closest_waypoint_index + LOOKAHEAD_WPS
         base_waypoints_slice = self.base_waypoints.waypoints[closest_waypoint_index:closest_waypoint_index+LOOKAHEAD_WPS]
         
