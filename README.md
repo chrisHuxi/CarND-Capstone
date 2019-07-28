@@ -1,4 +1,6 @@
+[//]: # (Image References)
 
+[ros_graph]: ./imgs/ros-graph.png "System Architecture"
 
 ## Deadline to submit: 10th, August
 
@@ -11,6 +13,13 @@
 |           | Zyuanhua                 |    zzyuanhua@163.com             |    [Zyuanhua](https://github.com/YHCodes)       |
 |           | Maharshi Patel           |    patelmaharshi94@gmail.com     |    [Maharshi](https://github.com/maharshi3patel)|
 |           | Aniket Satbhai           |    anks@tuta.io                  |    [Aniket](https://github.com/AnkS4)           |
+
+## System Architecture
+
+The project has following architecture:
+
+![ROS Graph][ros_graph]
+
 
 ## Our process so far: 
 
