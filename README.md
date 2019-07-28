@@ -1,6 +1,3 @@
-[//]: # (Image References)
-
-[ros_graph]: ./imgs/ros-graph.png "System Architecture"
 
 ## Deadline to submit: 10th, August
 
@@ -9,8 +6,8 @@
 |           | Name                     |    E-Mail                        |      GitHub                                     |
 | --------- | -------------------------| -------------------------------- | :----------------------------------------------:|
 | Team Lead | Xi Hu                    |    Xi.Hu@mailbox.tu-dresden.de   |    [Xi](https://github.com/chrisHuxi)           |
-|           | Yuanhui Li               |    viglyh@163.com                |    [Yuanhui](https://github.com/zzyuanhua)      |
-|           | Zyuanhua                 |    zzyuanhua@163.com             |    [Zyuanhua](https://github.com/YHCodes)       |
+|           | Yuanhui Li               |    viglyh@163.com                |    [Yuanhui](https://github.com/YHCodes)      |
+|           | Zyuanhua                 |    zzyuanhua@163.com             |    [Zyuanhua](https://github.com/zzyuanhua)       |
 |           | Maharshi Patel           |    patelmaharshi94@gmail.com     |    [Maharshi](https://github.com/maharshi3patel)|
 |           | Aniket Satbhai           |    anks@tuta.io                  |    [Aniket](https://github.com/AnkS4)           |
 
@@ -18,7 +15,7 @@
 
 The project has following architecture:
 
-![ROS Graph][ros_graph]
+![ROS Graph](./imgs/ros-graph.png)
 
 
 ## Our process so far: 
