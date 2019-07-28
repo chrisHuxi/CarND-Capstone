@@ -7,7 +7,7 @@
 |           | Name                     |    E-Mail                        |      GitHub                                     |
 | --------- | -------------------------| -------------------------------- | :----------------------------------------------:|
 | Team Lead | Xi Hu                    |    Xi.Hu@mailbox.tu-dresden.de   |    [Xi](https://github.com/chrisHuxi)           |
-|           | Yuanhui Li               |    viglyh@163.com                |    [Yuanhui]()       |
+|           | Yuanhui Li               |    viglyh@163.com                |    [Yuanhui](https://github.com/zzyuanhua)      |
 |           | Zyuanhua                 |    zzyuanhua@163.com             |    [Zyuanhua](https://github.com/YHCodes)       |
 |           | Maharshi Patel           |    patelmaharshi94@gmail.com     |    [Maharshi](https://github.com/maharshi3patel)|
 |           | Aniket Satbhai           |    anks@tuta.io                  |    [Aniket](https://github.com/AnkS4)           |
