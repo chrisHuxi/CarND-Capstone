@@ -12,7 +12,8 @@ class TLClassifier(object):
         if is_site == False:
             ssd_model = "/home/huxi/project/CarND-Capstone/ros/src/tl_detector/light_classification/frozen_model/frozen_sim_inception/frozen_inference_graph.pb"
         else:
-            ssd_model = "!!!!!!!!!!"
+            print("is site!")
+            ssd_model = "/home/huxi/project/CarND-Capstone/ros/src/tl_detector/light_classification/frozen_model/frozen_real_inception/frozen_inference_graph.pb"
         self.sess = None
         self.detection_graph = tf.Graph()
 
@@ -41,6 +42,8 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
+        rospy.logwarn("!!!!")
+
         # TODO implement light color prediction
         id_color = TrafficLight.UNKNOWN
         image_np_expanded = np.expand_dims(image, axis=0)
@@ -51,6 +54,9 @@ class TLClassifier(object):
         #2 'Red'
         #3 'Yellow'
         #4 'off'
+        rospy.logwarn("scores_array:{0}".format(scores_array))
+        rospy.logwarn("classes_array:{0}".format(classes_array))
+
         scores = np.array([s for s in scores_array[0] if s>Threshold_score])
         if len(scores) >= 1:
             classes = classes_array[0,0:len(scores)].astype('int32')
