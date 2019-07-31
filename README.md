@@ -20,14 +20,14 @@ The project has following architecture:
 
 ## Our process so far: 
 
-* **Simulation part:** almost done except a traffic light detector/classifier. Basically based on udacity-walkthrough. Some optimization was done to reduce latency. Passed on high way test scene.
+* **Simulation part:** almost done except a traffic light detector/classifier. Basically based on udacity-walkthrough. Some optimization was done to reduce latency. Passed on high way test scene. ==> **done**
 * **Real-world test:** I think we can reuse code of simulator part, and use a another traffic light detector/classifier based on real-world images.
 * **Not tested** on real-world data and second test slot scene yet. ==> **done**, everything gose well
 * And I have got already some **[labeled data](https://drive.google.com/open?id=1ygWBMW8PYeXUSP2nCAwhTDXeU87SFkpV)** both from simulator and real-world. And Here is a **[article using tensorflow to train and use rcnn and ssd model](https://becominghuman.ai/traffic-light-detection-tensorflow-api-c75fdbadac62)**
 
 ## TODO-List:
 
-* **Training** a traffic light detector/classifier for simulator, testing it on high way scene.
+* **Training** a traffic light detector/classifier for simulator, testing it on high way scene. ==> **done**
 * **Training** a traffic light detector/classifier for real-world, testing it on [bag file](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip).
 * Trying to **test code** on native ubuntu 16.04, see if the latency is acceptable or not. If not trying to optimize it. ==> **done**, latency issue improved significantly. 
 * **Reviewing** whole project and writing README document.
