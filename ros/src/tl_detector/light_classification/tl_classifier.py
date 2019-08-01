@@ -4,14 +4,15 @@ import time
 import tensorflow as tf
 import numpy as np
 
-Threshold_score = 0.7
 
 class TLClassifier(object):
     def __init__(self,is_site):
         #TODO load classifier
         if is_site == False:
+            self.Threshold_score = 0.7
             ssd_model = "/home/huxi/project/CarND-Capstone/ros/src/tl_detector/light_classification/frozen_model/frozen_sim_inception/frozen_inference_graph.pb"
         else:
+            self.Threshold_score = 0.2
             print("is site!")
             ssd_model = "/home/huxi/project/CarND-Capstone/ros/src/tl_detector/light_classification/frozen_model/frozen_real_inception/frozen_inference_graph.pb"
         self.sess = None
@@ -56,13 +57,18 @@ class TLClassifier(object):
         #4 'off'
         rospy.logwarn("scores_array:{0}".format(scores_array))
         rospy.logwarn("classes_array:{0}".format(classes_array))
+        
+        rospy.logwarn("TrafficLight.RED:{0}".format(TrafficLight.RED))
+        rospy.logwarn("TrafficLight.GREEN:{0}".format(TrafficLight.GREEN))
+        rospy.logwarn("TrafficLight.YELLOW:{0}".format( TrafficLight.YELLOW))
 
-        scores = np.array([s for s in scores_array[0] if s>Threshold_score])
+        scores = np.array([s for s in scores_array[0] if s>self.Threshold_score])
         if len(scores) >= 1:
             classes = classes_array[0,0:len(scores)].astype('int32')
             print(classes)
             if (classes==2).any():
                 id_color = TrafficLight.RED
+
             else:
                 counts = np.bincount(classes)
                 most_class = np.argmax(counts)
