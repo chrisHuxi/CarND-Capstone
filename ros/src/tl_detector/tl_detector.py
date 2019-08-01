@@ -84,8 +84,6 @@ class TLDetector(object):
         #else: #in real world data, TODO
             #light_wp, state = self.process_image()
 
-	rospy.logwarn("light_wp:{0}".format(light_wp))
-	rospy.logwarn("state:{0}".format(state))
         '''
         Publish upcoming red lights at camera frequency.
         Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
@@ -136,8 +134,10 @@ class TLDetector(object):
         if(not self.has_image):
             self.prev_light_loc = None
             return False
-
-        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        if self.config["is_site"] == False:
+            cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        else:
+            cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
         #Get classification
         return self.light_classifier.get_classification(cv_image)
         ''''''

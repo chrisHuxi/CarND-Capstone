@@ -3,18 +3,18 @@ import rospy
 import time
 import tensorflow as tf
 import numpy as np
-
+import os
 
 class TLClassifier(object):
     def __init__(self,is_site):
         #TODO load classifier
         if is_site == False:
             self.Threshold_score = 0.7
-            ssd_model = "/home/huxi/project/CarND-Capstone/ros/src/tl_detector/light_classification/frozen_model/frozen_sim_inception/frozen_inference_graph.pb"
+            ssd_model = os.path.abspath(os.curdir)+"/light_classification/frozen_model/frozen_sim_inception/frozen_inference_graph.pb"
         else:
-            self.Threshold_score = 0.2
+            self.Threshold_score = 0.5
             print("is site!")
-            ssd_model = "/home/huxi/project/CarND-Capstone/ros/src/tl_detector/light_classification/frozen_model/frozen_real_inception/frozen_inference_graph.pb"
+            ssd_model = os.path.abspath(os.curdir)+"/light_classification/frozen_model/frozen_real_c2_1/frozen_inference_graph.pb"
         self.sess = None
         self.detection_graph = tf.Graph()
 
@@ -43,7 +43,6 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        rospy.logwarn("!!!!")
 
         # TODO implement light color prediction
         id_color = TrafficLight.UNKNOWN
@@ -55,27 +54,21 @@ class TLClassifier(object):
         #2 'Red'
         #3 'Yellow'
         #4 'off'
-        rospy.logwarn("scores_array:{0}".format(scores_array))
-        rospy.logwarn("classes_array:{0}".format(classes_array))
-        
-        rospy.logwarn("TrafficLight.RED:{0}".format(TrafficLight.RED))
-        rospy.logwarn("TrafficLight.GREEN:{0}".format(TrafficLight.GREEN))
-        rospy.logwarn("TrafficLight.YELLOW:{0}".format( TrafficLight.YELLOW))
 
         scores = np.array([s for s in scores_array[0] if s>self.Threshold_score])
         if len(scores) >= 1:
             classes = classes_array[0,0:len(scores)].astype('int32')
-            print(classes)
             if (classes==2).any():
                 id_color = TrafficLight.RED
-
+                rospy.loginfo("detected traffic light: RED")
             else:
                 counts = np.bincount(classes)
                 most_class = np.argmax(counts)
                 if most_class == 1:
                     id_color = TrafficLight.GREEN
+                    rospy.loginfo("detected traffic light: GREEN")
                 elif most_class == 3:
                     id_color = TrafficLight.YELLOW
-
+                    rospy.loginfo("detected traffic light: YELLOW")
         return id_color
 
