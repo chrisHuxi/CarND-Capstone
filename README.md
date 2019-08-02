@@ -11,6 +11,58 @@
 |           | Maharshi Patel           |    patelmaharshi94@gmail.com     |    [Maharshi](https://github.com/maharshi3patel)|
 |           | Aniket Satbhai           |    anks@tuta.io                  |    [Aniket](https://github.com/AnkS4)           |
 
+## How to run test?
+### 1. test on simulator
+```bash
+cd ros
+catkin_make
+source devel/setup.sh
+roslaunch launch/styx.launch
+```
+wait until we get log info: 
+then, open the simulator, check the "Camera" and uncheck the "Manual"
+you will see the car runs like video [here]().
+
+
+**optional**: if you want to show how the camera output looks like, you can run in another terminal:
+
+```bash
+rosrun rviz rviz
+```
+then add topic: image_color/raw.
+
+**optional**: if you want to run 2nd test lot, you need to modify ros/src/waypoint_loader/launch/waypoint_loader.launch like this:
+
+```html
+#<param name="path" value="$(find styx)../../../data/wp_yaw_const.csv" />
+<param name="path" value="$(find styx)../../../data/churchlot_with_cars.csv"/>       
+<param name="velocity" value="5" />
+```
+then launch styx.launch and run simulator. you will see the car runs like video [here]()
+
+### 2. test on real world test bag:
+Firstly download the [bag file1](), [bag file2](), [bag file3]() 
+then run in terminal :
+```bash
+cd ros
+catkin_make
+source devel/setup.sh
+roslaunch launch/site.launch
+```
+And wait until we get log info:
+then run in other terminal:
+```bash
+rosbag play -l traffic_light_bag_file/traffic_light_training.bag
+```
+
+if you want to see the image given by bag file, open one another terminal and run:
+```bash
+rosrun rviz rviz
+```
+add topic: image_color/raw, you will see result as [this video]().
+
+
+
 ## System Architecture
 
 The project has following architecture:
