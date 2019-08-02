@@ -17,8 +17,36 @@ The project has following architecture:
 
 ![ROS Graph](./imgs/ros-graph.png)
 
+### Waypointer Updater Node
 
-## Our process so far: 
+Waypointer Updater node helps updating the target velocity of each waypoints based on traffic light and obstacle detection data.
+
+- It subscribes to the /base_waypoints, /current_pose and /traffic_waypoint topics.
+- It publishes a list of waypoints ahead of the car with target velocities to the /final_waypoints topic.
+
+Subscribed Topics:
+#### /base_waypoints
+Msg Type: styx_msgs/Lane
+
+This topic provides the waypoints along the driveway path. Waypoint Loader node publishes the list of waypoints to this topic at the starting.
+
+#### /current_pose
+Msg Type: geometry_msgs/PoseStamped
+
+This topic provides the current position of the vehicle. The position is published by the Car/Simulator.
+
+#### /traffic_waypoint
+Msg Type: std_msgs/Int32
+
+This topic provides the waypoints at which the car is expected to halt. Traffic Light Detection node publishes to this topic.
+
+Published topics:
+#### /final_waypoints
+Msg Type: styx_msgs/Lane
+
+Final waypoints are published to this topic. The vehicle is supposed to follow these waypoints.
+
+## Our process so far:
 
 * **Simulation part:** almost done except a traffic light detector/classifier. Basically based on udacity-walkthrough. Some optimization was done to reduce latency. Passed on high way test scene. ==> **done**
 * **Real-world test:** I think we can reuse code of simulator part, and use a another traffic light detector/classifier based on real-world images. ==> **done**
@@ -29,7 +57,7 @@ The project has following architecture:
 
 * **Training** a traffic light detector/classifier for simulator, testing it on high way scene. ==> **done**
 * **Training** a traffic light detector/classifier for real-world, testing it on [bag file](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip). ==> **done**
-* Trying to **test code** on native ubuntu 16.04, see if the latency is acceptable or not. If not trying to optimize it. ==> **done**, latency issue improved significantly. 
+* Trying to **test code** on native ubuntu 16.04, see if the latency is acceptable or not. If not trying to optimize it. ==> **done**, latency issue improved significantly.
 * **Reviewing** whole project and writing README document.
 
 
