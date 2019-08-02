@@ -20,6 +20,9 @@ source devel/setup.sh
 roslaunch launch/styx.launch
 ```
 wait until we get log info: 
+```
+[INFO] [1564778567.666529]: loaded ssd detector!
+```
 then, open the simulator, check the "Camera" and uncheck the "Manual"
 you will see the car runs like video [here]().
 
@@ -50,6 +53,9 @@ source devel/setup.sh
 roslaunch launch/site.launch
 ```
 And wait until we get log info:
+```
+[INFO] [1564778567.666529]: loaded ssd detector!
+```
 then run in other terminal:
 ```bash
 rosbag play -l traffic_light_bag_file/traffic_light_training.bag
