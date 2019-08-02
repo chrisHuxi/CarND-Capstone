@@ -93,22 +93,33 @@ Subscribed Topics:
 #### /twist_cmd
 Msg Type: geometry_msgs/TwistStamped
 
+This topic provides the proposed linear and angular velocities. Wapoint Follower Node publishes the message to this topic.
+
 #### /vehicle/dbw_enabled
 Msg Type: std_msgs/Bool
+
+This topic indicates if the car is under dbw or driver control. In the simulator, it'll always be True. But, for the actual vehicle we have to make sure if dbw_enabled is True for driving autonomously.
 
 #### /current_velocity
 Msg Type: geometry_msgs/TwistStamped
 
+This topic provides target linear and angular velocities the car should follow.
 
-Published Topics
+Published Topics:
 #### /vehicle/brake_cmd
 Msg Type: dbw_mkz_msgs/BrakeCmd
+
+Required percent of throttle is published to this topic.
 
 #### /vehicle/steering_cmd
 Msg Type: dbw_mkz_msgs/SteeringCmd
 
+Required steering angle is published to this topic.
+
 #### /vehicle/throttle_cmd
 Msg Type: dbw_mkz_msgs/ThrottleCmd
+
+Required amount of torque is applied using this topic.
 
 
 ## Our process so far:
