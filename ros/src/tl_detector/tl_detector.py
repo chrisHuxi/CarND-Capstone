@@ -37,7 +37,7 @@ class TLDetector(object):
         rely on the position of the light and the camera image to predict it.
         '''
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
-        sub6 = rospy.Subscriber('/image_raw', Image, self.image_cb,queue_size=5) # maybe image_raw?
+        sub6 = rospy.Subscriber('/image_color', Image, self.image_cb,queue_size=5) # maybe image_raw ==> raw dosen't work for simulator
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
@@ -78,11 +78,7 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
-        
-        #if self.config["is_site"] == False: #in simulator
         light_wp, state = self.process_traffic_lights()
-        #else: #in real world data, TODO
-            #light_wp, state = self.process_image()
 
         '''
         Publish upcoming red lights at camera frequency.
