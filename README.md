@@ -1,7 +1,7 @@
 
 ## Deadline to submit: 10th, August
 
-
+![image](https://github.com/chrisHuxi/CarND-Capstone/blob/master/imgs/udacity_self-driving_car_capstone_project_simulator.gif)
 ## Notes to reviewer:
 |           | Name                     |    E-Mail                        |      GitHub                                     |
 | --------- | -------------------------| -------------------------------- | :----------------------------------------------:|
