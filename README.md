@@ -46,6 +46,42 @@ Msg Type: styx_msgs/Lane
 
 Final waypoints are published to this topic. The vehicle is supposed to follow these waypoints.
 
+### Traffic Light Detection Node
+
+Traffic Light Detection Node detects the traffic light and publishes it's location.
+
+- It subscribes to the /base_waypoints, /current_pose, /vehicle/traffic_lights and /image_raw topics.
+- It publishes waypoint index of upcoming traffic light position to /traffic_waypoint.
+
+Subscribed Topics:
+#### /base_waypoints
+Msg Type: styx_msgs/Lane
+
+This topic provides the waypoints along the driveway path. These are the same list of waypoints used in Waypoint Updater node.
+
+#### /current_pose
+Msg Type: geometry_msgs/PoseStamped
+
+This topic provides the current position of the vehicle. The position is published by the Car/Simulator.
+
+#### /image_raw
+Msg Type: sensor_msgs/Image
+
+This topic provides raw image from the vehicle sensor. The image helps identify red lights in the incoming camera image.
+
+#### /vehicle/traffic_lights
+Msg Type: styx_msgs/TrafficLightArray
+
+This topic is only used while using the simulator for testing the vehicle path without the use of classifier.
+This topic provides the location of the traffic light in 3D map space and helps acquire an accurate ground truth data source for the traffic light classifier by sending the current color state of all traffic lights in the simulator.
+
+Published Topics:
+#### /traffic_waypoint
+Msg Type: std_msgs/Int32
+
+This topic provides the waypoints at which the car is expected to halt.
+
+
 ## Our process so far:
 
 * **Simulation part:** almost done except a traffic light detector/classifier. Basically based on udacity-walkthrough. Some optimization was done to reduce latency. Passed on high way test scene. ==> **done**
