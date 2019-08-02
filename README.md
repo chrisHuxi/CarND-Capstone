@@ -2,7 +2,7 @@
 ## Deadline to submit: 10th, August
 
 
-## Our Team: Who Needs Driver?
+## Notes to reviewer:
 |           | Name                     |    E-Mail                        |      GitHub                                     |
 | --------- | -------------------------| -------------------------------- | :----------------------------------------------:|
 | Team Lead | Xi Hu                    |    chris_huxi@163.com            |    [Xi](https://github.com/chrisHuxi)           |
