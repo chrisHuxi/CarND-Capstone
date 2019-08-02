@@ -5,9 +5,9 @@
 ## Our Team: Who Needs Driver?
 |           | Name                     |    E-Mail                        |      GitHub                                     |
 | --------- | -------------------------| -------------------------------- | :----------------------------------------------:|
-| Team Lead | Xi Hu                    |    Xi.Hu@mailbox.tu-dresden.de   |    [Xi](https://github.com/chrisHuxi)           |
-|           | Yuanhui Li               |    viglyh@163.com                |    [Yuanhui](https://github.com/YHCodes)      |
-|           | Zyuanhua                 |    zzyuanhua@163.com             |    [Zyuanhua](https://github.com/zzyuanhua)       |
+| Team Lead | Xi Hu                    |    chris_huxi@163.com            |    [Xi](https://github.com/chrisHuxi)           |
+|           | Yuanhui Li               |    viglyh@163.com                |    [Yuanhui](https://github.com/YHCodes)        |
+|           | Zyuanhua                 |    zzyuanhua@163.com             |    [Zyuanhua](https://github.com/zzyuanhua)     |
 |           | Maharshi Patel           |    patelmaharshi94@gmail.com     |    [Maharshi](https://github.com/maharshi3patel)|
 |           | Aniket Satbhai           |    anks@tuta.io                  |    [Aniket](https://github.com/AnkS4)           |
 
