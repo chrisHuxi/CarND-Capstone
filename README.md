@@ -44,7 +44,7 @@ then add topic: image_color/raw.
 then launch styx.launch and run simulator. you will see the car runs like video [here](https://www.youtube.com/watch?v=aBc22Gv5GgY&feature=youtu.be)
 
 ### 2. test on real world test bag:
-Firstly download the [bag file1](), [bag file2](), [bag file3]() 
+Firstly download the [bag file](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM) 
 then run in terminal :
 ```bash
 cd ros
