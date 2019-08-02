@@ -82,6 +82,35 @@ Msg Type: std_msgs/Int32
 This topic provides the waypoints at which the car is expected to halt.
 
 
+### DBW Node
+
+Drive-By-Wire Node uses the final waypoints to apply required brake, steering and throttle values to drive the vehicle.
+
+- It subscribes to the /twist_cmd, /vehicle/dbw_enabled and /current_velocity topics.
+- It publishes /vehicle/brake_cmd, /vehicle/steering_cmd and /vehicle/throttle_cmd topics.
+
+Subscribed Topics:
+#### /twist_cmd
+Msg Type: geometry_msgs/TwistStamped
+
+#### /vehicle/dbw_enabled
+Msg Type: std_msgs/Bool
+
+#### /current_velocity
+Msg Type: geometry_msgs/TwistStamped
+
+
+Published Topics
+#### /vehicle/brake_cmd
+Msg Type: dbw_mkz_msgs/BrakeCmd
+
+#### /vehicle/steering_cmd
+Msg Type: dbw_mkz_msgs/SteeringCmd
+
+#### /vehicle/throttle_cmd
+Msg Type: dbw_mkz_msgs/ThrottleCmd
+
+
 ## Our process so far:
 
 * **Simulation part:** almost done except a traffic light detector/classifier. Basically based on udacity-walkthrough. Some optimization was done to reduce latency. Passed on high way test scene. ==> **done**
