@@ -1,7 +1,7 @@
 [![Udacity - Self-Driving CarNanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 
-Self-Driving-Car Capstone Project
+# Self-Driving-Car Capstone Project
 
 ![image](https://github.com/chrisHuxi/CarND-Capstone/blob/master/imgs/udacity_self-driving_car_capstone_project_simulator.gif)
 
