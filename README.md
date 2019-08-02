@@ -24,7 +24,7 @@ wait until we get log info:
 [INFO] [1564778567.666529]: loaded ssd detector!
 ```
 then, open the simulator, check the "Camera" and uncheck the "Manual"
-you will see the car runs like video [here]().
+you will see the car runs like video [here](https://www.youtube.com/watch?v=53VO-UKxIKU&feature=youtu.be).
 
 
 **optional**: if you want to show how the camera output looks like, you can run in another terminal:
@@ -41,7 +41,7 @@ then add topic: image_color/raw.
 <param name="path" value="$(find styx)../../../data/churchlot_with_cars.csv"/>       
 <param name="velocity" value="5" />
 ```
-then launch styx.launch and run simulator. you will see the car runs like video [here]()
+then launch styx.launch and run simulator. you will see the car runs like video [here](https://www.youtube.com/watch?v=aBc22Gv5GgY&feature=youtu.be)
 
 ### 2. test on real world test bag:
 Firstly download the [bag file1](), [bag file2](), [bag file3]() 
@@ -58,14 +58,14 @@ And wait until we get log info:
 ```
 then run in other terminal:
 ```bash
-rosbag play -l traffic_light_bag_file/traffic_light_training.bag
+rosbag play -l XXX.bag
 ```
 
 if you want to see the image given by bag file, open one another terminal and run:
 ```bash
 rosrun rviz rviz
 ```
-add topic: image_color/raw, you will see result as [this video]().
+add topic: image_color/raw, you will see result as this [video: just_traffic_light.bag](https://www.youtube.com/watch?v=h7DuEj_1jVs&feature=youtu.be), [video: loop_with_traffic_light.bag](https://www.youtube.com/watch?v=AOS5C2_APOo&feature=youtu.be), [video: udacity_succesful_light_detection.bag](https://www.youtube.com/watch?v=nDF-dz21smM&feature=youtu.be)
 
 
 
