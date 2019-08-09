@@ -25,7 +25,7 @@ class Controller(object):
 
 
         mn = 0.0 #min throttle value
-        mx = 0.2 #max throttle value
+        mx = 0.7 #max throttle value
         self.throttle_controller = PID(kp, ki, kd, mn, mx)
         # PID controller parameter: 
         # P-controller: gives output which is proportional to current error.
