@@ -9,7 +9,7 @@ ONE_MPH = 0.44704
 
 class Controller(object):
     def __init__(self, vehicle_mass, fuel_capacity, brake_deadband, decel_limit, accel_limit, wheel_radius,
-                                    wheel_base, steer_ratio, max_lat_accel, max_steer_angle):
+                                    wheel_base, steer_ratio, max_lat_accel, max_steer_angle, max_velocity_launch):
         # TODO: Implement
         min_speed = 0.1
         self.yaw_controller = YawController(wheel_base, steer_ratio, min_speed, max_lat_accel, max_steer_angle)
@@ -25,7 +25,18 @@ class Controller(object):
 
 
         mn = 0.0 #min throttle value
-        mx = 0.7 #max throttle value
+        mx = 0.4 #max throttle value
+
+        if (max_velocity_launch <= 10):
+            mx = 0.7
+        elif (max_velocity_launch > 10 and max_velocity_launch <= 25):
+            mx = 0.6
+        elif (max_velocity_launch > 25 and max_velocity_launch <= 35):
+            mx = 0.45
+        elif (max_velocity_launch > 35 and max_velocity_launch <= 45):
+            mx = 0.3
+        elif (max_velocity_launch > 45):
+            mx = 0.2        
         self.throttle_controller = PID(kp, ki, kd, mn, mx)
         # PID controller parameter: 
         # P-controller: gives output which is proportional to current error.
@@ -33,11 +44,11 @@ class Controller(object):
         # D-controller: anticipates future behavior of the error
         # reference: https://www.elprocus.com/the-working-of-a-pid-controller/
         
-        #===================low pass filter: ?? ===================#
+        #===================low pass filter===================#
         tau = 0.5 # highest frequency: 1/(2*PI*tau)
         ts = 0.02 # 50 Hz
         self.low_pass_filter = LowPassFilter(tau, ts) # in order to filter out all of the high-frequency noise in velocity
-        #===================low pass filter: ?? ===================#
+        #===================low pass filter===================#
         
         self.vehicle_mass = vehicle_mass
         self.fuel_capacity = fuel_capacity
@@ -81,7 +92,6 @@ class Controller(object):
             throttle = 0.0
             deceleration = max(self.decel_limit, velocity_error)
             # notice: decel_limit is negative, so here we use max(), instead of min() 
-            # here I modify: velocity_error => velocity_error/sample_time
             
             brake = abs(deceleration)*self.vehicle_mass*self.wheel_radius
         #rospy.logwarn("throttle: {0}".format(throttle))

@@ -9,7 +9,7 @@ class TLClassifier(object):
     def __init__(self,is_site):
         #TODO load classifier
         if is_site == False:
-            self.Threshold_score = 0.7
+            self.Threshold_score = 0.5
             ssd_model = os.path.abspath(os.curdir)+"/light_classification/frozen_model/frozen_sim_inception/frozen_inference_graph.pb"
         else:
             self.Threshold_score = 0.5

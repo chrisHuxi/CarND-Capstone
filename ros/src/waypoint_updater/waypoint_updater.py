@@ -26,7 +26,7 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
 LOOKAHEAD_WPS = 75 # Number of waypoints we will publish. You can change this number
-MAX_DECEL = 0.5
+MAX_DECEL = 0.4
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -39,6 +39,8 @@ class WaypointUpdater(object):
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
+
+        self.max_velocity_launch = rospy.get_param('/waypoint_loader/velocity') #depends on velocity, choose max throttle 
 
         # TODO: Add other member variables you need below
         self.base_waypoints = None
@@ -109,7 +111,7 @@ class WaypointUpdater(object):
         closest_waypoint_index = self.get_closest_points_index()
         #rospy.logwarn("closest_waypoint_index:{0}".format(closest_waypoint_index))
         farthest_waypoint_index = closest_waypoint_index + LOOKAHEAD_WPS
-        base_waypoints_slice = self.base_waypoints.waypoints[closest_waypoint_index:closest_waypoint_index+LOOKAHEAD_WPS]
+        base_waypoints_slice = self.base_waypoints.waypoints[closest_waypoint_index:farthest_waypoint_index]
         
         if self.stop_line_waypoint_index == -1 or self.stop_line_waypoint_index >= farthest_waypoint_index:
             final_lane.waypoints = base_waypoints_slice
@@ -124,23 +126,31 @@ class WaypointUpdater(object):
     def get_decelerate_waypoint(self, base_waypoints_slice, closest_waypoint_index):
         # TODO
         temp_waypoints_list = []
-        #initial_velocity = base_waypoints_slice[0].twist.twist.linear.x
-        
-        #initial_distance_to_stop = self.distance(base_waypoints_slice, 0, stop_index)
-        decelaration_in_theory = MAX_DECEL#(initial_velocity)*(initial_velocity)/(2.0*initial_distance_to_stop)
-        
+        rospy.logwarn("self.stop_line_waypoint_index:{0}".format(self.stop_line_waypoint_index))
+        decelaration_in_theory = MAX_DECEL
         for i,wp in enumerate(base_waypoints_slice):
             temp_waypoint = Waypoint()
             temp_waypoint.pose = wp.pose
             # we should stop a little bit in front of stop line to make sure safty
             stop_index = max(self.stop_line_waypoint_index - closest_waypoint_index - 2, 0)
-            #rospy.logwarn("stop_index:{0}".format(stop_index))
+
             distance_to_stop = self.distance(base_waypoints_slice, i, stop_index)
-            desire_velocity = math.sqrt(2 * decelaration_in_theory * distance_to_stop)
+            desire_velocity = math.sqrt(2 * decelaration_in_theory * distance_to_stop + 0.000000000001)
             # uniformly accelerated motion: v^2 = 2 * a * x
-            if desire_velocity < 1.0:
+
+            forward_waypoints_num = 6
+
+            if (self.max_velocity_launch > 15 and self.max_velocity_launch <= 25):
+                forward_waypoints_num = 8
+            elif (self.max_velocity_launch > 25 and self.max_velocity_launch <= 35):
+                forward_waypoints_num = 10
+            elif (self.max_velocity_launch > 35):
+                forward_waypoints_num = 12
+
+            if ((desire_velocity < 1.2) and (desire_velocity < wp.twist.twist.linear.x)) or (((self.stop_line_waypoint_index - closest_waypoint_index) <= forward_waypoints_num) and ((self.stop_line_waypoint_index - closest_waypoint_index) >= 0)):
+                rospy.logwarn("self.stop_line_waypoint_index - closest_waypoint_index:{0}".format(self.stop_line_waypoint_index - closest_waypoint_index))
                 desire_velocity = 0.0
-            temp_waypoint.twist.twist.linear.x = min(desire_velocity, temp_waypoint.twist.twist.linear.x)
+            temp_waypoint.twist.twist.linear.x = min(desire_velocity, wp.twist.twist.linear.x)
             temp_waypoints_list.append(temp_waypoint)
         return temp_waypoints_list
     
