@@ -148,7 +148,7 @@ class WaypointUpdater(object):
                 forward_waypoints_num = 12
 
             if ((desire_velocity < 1.2) and (desire_velocity < wp.twist.twist.linear.x)) or (((self.stop_line_waypoint_index - closest_waypoint_index) <= forward_waypoints_num) and ((self.stop_line_waypoint_index - closest_waypoint_index) >= 0)):
-                rospy.logwarn("self.stop_line_waypoint_index - closest_waypoint_index:{0}".format(self.stop_line_waypoint_index - closest_waypoint_index))
+                #rospy.logwarn("self.stop_line_waypoint_index - closest_waypoint_index:{0}".format(self.stop_line_waypoint_index - closest_waypoint_index))
                 desire_velocity = 0.0
             temp_waypoint.twist.twist.linear.x = min(desire_velocity, wp.twist.twist.linear.x)
             temp_waypoints_list.append(temp_waypoint)
