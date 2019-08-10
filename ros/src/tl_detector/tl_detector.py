@@ -22,7 +22,7 @@ class TLDetector(object):
         self.waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
-        
+
         self.camera_image = None
         self.lights = []
 
@@ -59,10 +59,10 @@ class TLDetector(object):
         self.pose = msg
 
     def waypoints_cb(self, waypoints):
-        
+
         self.waypoints = waypoints
         if not self.waypoints_2d:
-            self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints] 
+            self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
 
     def traffic_cb(self, msg):
@@ -97,7 +97,7 @@ class TLDetector(object):
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
         self.state_count += 1
-        
+
 
     def get_closest_waypoint(self, x, y):
         """Identifies the closest path waypoint to the given position
@@ -110,7 +110,7 @@ class TLDetector(object):
 
         """
         # TODO
-        closest_index = self.waypoint_tree.query([x,y], 1)[1]        
+        closest_index = self.waypoint_tree.query([x,y], 1)[1]
         return closest_index
         # TODO: END
 
@@ -124,7 +124,7 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        
+
         if(not self.has_image):
             self.prev_light_loc = None
             return False
@@ -132,8 +132,15 @@ class TLDetector(object):
             cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
         else:
             cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
-        #Get classification
-        return self.light_classifier.get_classification(cv_image)
+        try:
+            #Get classification
+            obtained_class = self.light_classifier.get_classification(cv_image)
+
+        except AttributeError:
+            print "State information is still loading..."
+            return False
+
+        return obtained_class
         ''''''
 
     def process_traffic_lights(self):
@@ -148,26 +155,26 @@ class TLDetector(object):
         closest_light = None
         line_waypoint_idx = None
         #light = None
-        
+
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
-        
+
         if(self.pose):
 
             car_waypoint_index = self.get_closest_waypoint(self.pose.pose.position.x, self.pose.pose.position.y)
-            
+
             # maxium distance(count by waypoints) to see a traffic light
             max_distance_to_see_tl = len(self.waypoints.waypoints) #50
             current_min_diff = max_distance_to_see_tl
 
-            
+
             # loop to finding the closest traffic light in front
             for i,light in enumerate(self.lights):
                 line_position = stop_line_positions[i]
                 tem_waypoint_indx = self.get_closest_waypoint(line_position[0],line_position[1])
-                
+
                 difference = tem_waypoint_indx - car_waypoint_index
-                
+
                 # if this stop line is too far or behind car
                 if(difference > current_min_diff or difference < 0):
                     continue
@@ -177,14 +184,14 @@ class TLDetector(object):
                     closest_light = light
                     line_waypoint_idx = tem_waypoint_indx
                     current_min_diff = difference
-            
-               
+
+
         #TODO find the closest visible traffic light (if one exists)
 
         if closest_light and line_waypoint_idx:
             state = self.get_light_state()
             return line_waypoint_idx, state
-            
+
         return -1, TrafficLight.UNKNOWN
 
 
